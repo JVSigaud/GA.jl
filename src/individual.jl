@@ -24,7 +24,7 @@ function rand!(Obj::StructArray{Chromossome},constraint::Int64,num_var::Int64,in
     end
 end
 
-function BIN1D(data::BitVector)
+function BIN1D(data::AbstractArray)
     expoentes::Int32 = length(data) - 1
     sum = zero(Float64)
     @inbounds for i in eachindex(data)
@@ -38,8 +38,8 @@ end
 
 function BIN(data::BitVector,constraint::Int64,num_var::Int64)
     fen::Vector{Float64} = Vector{Float64}(undef,num_var)
-    for i in 0:num_var-1
-        fen[i+1] = BIN1D(data[i*constraint + 1:(i+1)*constraint])
+    @inbounds for i in 0:num_var-1
+        fen[i+1] = BIN1D(@view data[i*constraint + 1:(i+1)*constraint])
     end
     return fen
 end
